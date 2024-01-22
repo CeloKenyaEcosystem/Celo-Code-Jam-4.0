@@ -1,4 +1,4 @@
-# Celo Code Jam 3.0
+# Celo Code Jam 4.0 - Build With MiniPay
 
 #### Celo Code Jam Polpular Theme Tracks
 The Code Jam Theme Tracks are specific categories or themes for participants to focus on while participating in the Code Jam event. Each track represents a different area of interest or challenge that participants can choose to tackle with their projects. The three tracks mentioned are as follows:
