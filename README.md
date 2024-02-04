@@ -8,10 +8,10 @@ PAYr
 DE-FI build on MiniPay
 ##### Team Members
 
-- Austine, Backend
-- Fadhili, Backend
-- Kevin, Frontend
-- Gilbert, Frontend
+- Austine, Backend - austinekaranja14@gmail.com
+- Fadhil, Backend - mulinyafadhil@gmail.com
+- Kevin, Frontend - kmunene858@gmail.com
+- Gilbert, Frontend -okonjogilbert2@gmail.com
 
 #### Project Description
 Our groundbreaking project tackles the longstanding challenges inherent in conventional Payroll Management Systems by harnessing the power of the Celo blockchain, a pioneer in decentralized finance (DeFi). In a landscape often burdened by security loopholes, inefficiencies, and limited accessibility, our solution emerges as a beacon of innovation.
