@@ -15,6 +15,8 @@ import { configureChains, createConfig, WagmiConfig } from 'wagmi'
 import { celo } from 'wagmi/chains'
 import { CreateFlow } from './Pages/Create'
 
+import HomeBar from './Pages/HomeBar'
+
 
 const chains = [celo]
 const projectId = '7fc612a85a16989568e15f7c57429531'
@@ -34,7 +36,8 @@ function App() {
     <WagmiConfig config={wagmiConfig}>
       <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Home/>}/>
+        {/* <Route path='/' element={<Home/>}/> */}
+        <Route path='/' element={<HomeBar/>}/>
         <Route path='home' element={<Home/>}/>
         <Route path='add' element={<AddFreelancer/>}/>
         <Route path='manage' element={<Manage/>}/>
