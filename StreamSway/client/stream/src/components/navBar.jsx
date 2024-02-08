@@ -12,14 +12,14 @@ import {MdMenu} from "react-icons/md"
 const Navbar = ()=>{
     const navigate = useNavigate();
     return(
-        <div className="h-10 w-full flex justify-between items-center text-white  ">
+        <div className="h-10 w-full flex justify-between items-center text-black  ">
             <div className="bg-orange-400 text-blue-300 mb-2 h-1/2 ml-5">
             <Menu className="h-full bg-orange-400">
       <MenuHandler>
         <Button className="h-10 w-10"><MdMenu className="h-full w-full"/></Button>
       </MenuHandler>
-      <MenuList className="mb-10">
-        <MenuItem className="text-orange-300 font-inter text-base font-medium" onClick={()=>{navigate("/home")}}><div className="flex justify-around items-center"> <span><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17.8" viewBox="0 0 72 72" fill="none">
+      <MenuList className="mb-10 bg-black">
+        <MenuItem className="text-orange-300 font-inter text-base font-medium" onClick={()=>{navigate("/land")}}><div className="flex justify-around items-center"> <span><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17.8" viewBox="0 0 72 72" fill="none">
   <path d="M36 0C35.2159 5.10998e-05 34.4629 0.307125 33.9023 0.855469L1.17773 27.6211C1.13994 27.6495 1.10282 27.6788 1.06641 27.709L0.955078 27.8027V27.8086C0.654188 28.0889 0.41414 28.4281 0.249841 28.8051C0.0855421 29.182 0.000501223 29.5888 0 30C0 30.7956 0.31607 31.5587 0.87868 32.1213C1.44129 32.6839 2.20435 33 3 33H6V66C6 69.315 8.685 72 12 72H60C63.315 72 66 69.315 66 66V33H69C69.7956 33 70.5587 32.6839 71.1213 32.1213C71.6839 31.5587 72 30.7956 72 30C72.0003 29.5878 71.9156 29.1799 71.7513 28.8019C71.587 28.4238 71.3465 28.0837 71.0449 27.8027L70.998 27.7676C70.9322 27.7079 70.8638 27.6512 70.793 27.5977L66 23.6777V12C66 10.344 64.656 9 63 9H60C58.344 9 57 10.344 57 12V16.3184L38.0332 0.802734C37.4805 0.288978 36.7546 0.002356 36 0ZM45 39H57V63H45V39Z" fill="#F9D978"/>
 </svg></span><h2>Home</h2></div></MenuItem>
 <hr className="my-3" />
@@ -68,7 +68,7 @@ const Navbar = ()=>{
     </Menu> 
             </div>
 <div className=" animate-pulse p-5">
-<button onClick={()=>{navigate("/home")}}>StreamPay</button>
+<button onClick={()=>{navigate("/home")}}>StreamSway</button>
 </div>
 <div className="p-5 pt-10">
   {window.ethereum.isMiniPay?"":<Web3Button themeVariables={{
