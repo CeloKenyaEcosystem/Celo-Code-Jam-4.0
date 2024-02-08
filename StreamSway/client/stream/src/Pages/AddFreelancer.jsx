@@ -5,7 +5,7 @@ import AddCard from "../components/addCard";
 import Navbar from "../components/navBar";
 const AddFreelancer = ()=>{
     return(
-        <div className="min-h-full h-screen w-screen bg-green-600 fixed ">
+        <div className="min-h-full h-screen w-screen  fixed ">
 <Navbar/>
             
                 

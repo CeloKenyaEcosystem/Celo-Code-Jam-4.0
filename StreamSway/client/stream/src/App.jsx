@@ -38,7 +38,7 @@ function App() {
       <Routes>
         {/* <Route path='/' element={<Home/>}/> */}
         <Route path='/' element={<HomeBar/>}/>
-        <Route path='home' element={<Home/>}/>
+        <Route path='home' element={<HomeBar/>}/>
         <Route path='add' element={<AddFreelancer/>}/>
         <Route path='manage' element={<Manage/>}/>
         <Route path='stream' element={<Stream/>}/>
