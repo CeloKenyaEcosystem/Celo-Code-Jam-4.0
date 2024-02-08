@@ -9,8 +9,8 @@ import {Framework} from "@superfluid-finance/sdk-core";
 const Account = ()=>{
   
     return(
-        <div className="min-h-full h-screen w-full fixed bg-green-600  ">
-            <div className="w-full ">
+        <div className="min-h-full h-screen w-full fixed   ">
+            <div className="w-full h-20 ">
             <Navbar/>
             </div>
 

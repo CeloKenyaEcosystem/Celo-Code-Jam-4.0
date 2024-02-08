@@ -3,23 +3,20 @@ import SideBar from "../components/sideBar";
 import HomeNavbar from "../components/HomeNavbar";
 import MyFreelancerCard from "../components/myfreelancerCard";
 import Navbar from "../components/navBar";
-const MyFreeLancers = ()=>{
-    return(
-        <div className="min-h-full h-screen w-full bg-green-600  overflow-y-auto ">
-<Navbar/>
-           
-                
-                {/* <SideBar/> */}
-                <div className="flex flex-col ml-10 mr-10    ">
-                    <MyFreelancerCard/>
-               
 
-
+const MyFreeLancers = () => {
+    return (
+        <div className="min-h-full h-screen w-full overflow-y-auto">
+            <div className="h-20 w-full">
+                <Navbar />
             </div>
 
+            {/* <SideBar /> */}
+            <div className="flex  flex-col  w-3/4 justify-center justify-self-center ml-10 ">
+                <MyFreelancerCard />
+            </div>
         </div>
-
-    )
+    );
 }
 
 export default MyFreeLancers;

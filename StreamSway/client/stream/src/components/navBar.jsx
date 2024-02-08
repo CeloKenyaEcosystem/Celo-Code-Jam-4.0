@@ -8,6 +8,7 @@ import {
   } from "@material-tailwind/react";
 import { Web3Button } from "@web3modal/react";
 import { useNavigate } from "react-router-dom";
+import {MdMenu} from "react-icons/md"
 const Navbar = ()=>{
     const navigate = useNavigate();
     return(
@@ -15,7 +16,7 @@ const Navbar = ()=>{
             <div className="bg-orange-400 text-blue-300 mb-2 h-1/2 ml-5">
             <Menu className="h-full bg-orange-400">
       <MenuHandler>
-        <Button>Menu</Button>
+        <Button className="h-10 w-10"><MdMenu className="h-full w-full"/></Button>
       </MenuHandler>
       <MenuList className="mb-10">
         <MenuItem className="text-orange-300 font-inter text-base font-medium" onClick={()=>{navigate("/home")}}><div className="flex justify-around items-center"> <span><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17.8" viewBox="0 0 72 72" fill="none">

@@ -207,10 +207,10 @@ const removeFreeeLancer = async()=>{
     <>
     {/* {freelancers ==null || freelancers == undefined?<Toast message="Please Add Users!!"/>:""} */}
       {freelancers?.map((employee, index) => (
-        <div className="w-full h-1/2">
+        <div className="w-full h-1/2 items-center gap-4">
 
         
-        <div key={index} className="flex full flex-col mb-10 md:w-3/4   w-full  text-gray-200 mb-0 rounded bg-black text-white  ">
+        <div key={index} className="flex full flex-col mb-10 md:w-3/4   w-full  text-gray-200   bg-[#2B392B] rounded-2xl   ">
           <div className="flex   md:justify-evenly md:w-full md:flex-row  w-full flex-col md:text-xl text-sm   h-1/2 items-center text-white mb-8 gap-8 ">
             <h3 className="text-white">FreeLancer Address: </h3>
             <span className="flex ">

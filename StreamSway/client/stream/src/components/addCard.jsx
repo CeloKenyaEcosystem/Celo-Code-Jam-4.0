@@ -70,19 +70,19 @@ setTost(false);
       <div className="flex h-1/2 md:h-3/4 flex-col gap-40 pt-5 relative z-0 ">
      
         <div className="flex md:justify-evenly md:items-center md:flex-row flex-col">
-          <h3 className="text-center md:text-start text-gray-100">FreeLancer Address:</h3>
-          <input className="border-b  bg-transparent  outline-none   text-center text-black" type="text" placeholder="0x74....39749" onChange={(e) => { setFreelancerAddress(e.target.value) }} />
+          <h3 className="text-center md:text-start text-black">FreeLancer Address:</h3>
+          <input className="border-b md:w-3/4 bg-transparent  outline-none   text-center text-black" type="text" placeholder="0x74....39749" onChange={(e) => { setFreelancerAddress(e.target.value) }} />
         </div>
         <div className="flex md:justify-evenly md:items-center md:flex-row flex-col">
-          <h3 className="text-center md:text-start text-gray-100">Amount in cUSD:</h3>
-          <input className="border-b border-gray-600 outline-none bg-transparent text-center text-black" type="text" placeholder="4000" onChange={(e) => { setAmount(ethers.utils.parseEther(e.target.value)) }} />
+          <h3 className="text-center md:text-start text-black">Amount in cUSD:</h3>
+          <input className="border-b md:w-3/4 border-gray-600 outline-none bg-transparent text-center text-black" type="text" placeholder="4000" onChange={(e) => { setAmount(ethers.utils.parseEther(e.target.value)) }} />
         </div>
         <div className="flex justify-between items-center text-black md:pl-10 md:pr-10 pl-1 pr-1">
           <div className="bg-[#B28B67] w-20 h-10 rounded-lg">
-          <button className="inline-flex p-2 justify-center items-center w-20 md:w-20 rounded text-sm md:text-2xl md:rounded-full bg-red-200">Cancel</button>
+          <button className="inline-flex p-2 justify-center items-center w-20 md:w-20 rounded text-sm md:text-2xl md:rounded-full text-center">Cancel</button>
           </div>
           <div className="bg-[#2c821b] w-20 h-10 rounded-lg">
-          <button onClick={() => { addFreelancer() }} className="inline-flex p-2 justify-center items-center w-20 md:w-20 rounded text-sm md:text-xl md:rounded-full bg-green-200">Add</button>
+          <button onClick={() => { addFreelancer() }} className="inline-flex p-2 justify-center items-center w-20 md:w-20 rounded text-sm md:text-xl md:rounded-full ">Add</button>
           </div>
           
         </div>
