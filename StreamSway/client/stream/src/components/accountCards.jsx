@@ -280,63 +280,51 @@ setDownGradeTost(false);
   async function getUserCusdxStream() {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
-  
+
     const signer = provider.getSigner();
-    console.log("usesrs address",await signer.getAddress())
-  
+    console.log("usesrs address", await signer.getAddress());
+
     const chainId = await window.ethereum.request({ method: "eth_chainId" });
     const sf = await Framework.create({
-      chainId: Number(chainId),
-      provider: provider
+        chainId: Number(chainId),
+        provider: provider
     });
-  
+
     const superSigner = sf.createSigner({ signer: signer });
-  
+
     console.log(signer);
     console.log(await superSigner.getAddress());
     const celox = await sf.loadSuperToken("cUSDx");
-  
+
     console.log(celox);
-  
+
     try {
-      // const downgradeOperation = celox.downgrade({
-      //   amount: ethers.utils.parseEther(amount)
-      // });
-      const userbalancercusdx = celox.realtimeBalanceOf({
-        account: "0xdf089f52f9d8fcc320d6dc97afc1098e88d85f0f",
-        providerOrSigner:provider,
-        timestamp:Date.now()
-      }
-            
-            )
+        setInterval(async () => {
+            const userbalancercusdx = await celox.realtimeBalanceOf({
+                account: "0xdf089f52f9d8fcc320d6dc97afc1098e88d85f0f",
+                providerOrSigner: provider,
+                timestamp: Date.now()
+            });
+
+            console.log("real time balance", userbalancercusdx.availableBalance);
             const userflow = celox.getFlow({
-               sender: await signer.getAddress(),
-              receiver: "0xdf089f52f9d8fcc320d6dc97afc1098e88d85f0f",
-              providerOrSigner:provider,
-              
+                sender: await signer.getAddress(),
+                receiver: "0xdf089f52f9d8fcc320d6dc97afc1098e88d85f0f",
+                providerOrSigner: provider,
             })
-  
-      
-  
-    //  // const bal = await userbalancercusdx.exec(signer);
-    //  const userbal = await userbalancercusdx;
-    //  setcusdxBalance(userbal/10**18);
-    const firstElement = await userbalancercusdx;
-  
-      console.log(
-        "uer balance now",  firstElement.availableBalance
-      );
- // console.log("userFlow",(await userflow).deposit);
- console.log("useflow rate",await userflow)
-      
+
+            console.log(
+                "user balance now", userbalancercusdx.availableBalance
+            );
+            console.log("useflow rate", await userflow);
+        }, 1000); // Update every second
     } catch (error) {
-      console.log(
-        "cusdx balance failed!"
-      );
-      console.error(error);
+        console.log(
+            "cusdx balance failed!"
+        );
+        console.error(error);
     }
-  }
-  
+}
   async function approveTokens(amount) {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
