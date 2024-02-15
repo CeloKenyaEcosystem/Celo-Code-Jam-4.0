@@ -13,7 +13,7 @@ const Navbar = ()=>{
     const navigate = useNavigate();
     return(
         <div className="h-10 w-full flex justify-between items-center text-black  ">
-            <div className="bg-orange-400 text-blue-300 mb-2 h-1/2 ml-5">
+            <div className="bg-orange-400 text-blue-300  h-1/2 ml-5">
             <Menu className="h-full bg-orange-400">
       <MenuHandler>
         <Button className="h-10 w-10"><MdMenu className="h-full w-full"/></Button>

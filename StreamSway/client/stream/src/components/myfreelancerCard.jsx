@@ -285,7 +285,7 @@ const removeFreeeLancer = async()=>{
           <div className="flex  md:justify-stretch  justify-between  md:text-xl text-sm w-full gap-2 items-center text-white ">
             <h3 className="ml-4">Amount in Cusd: </h3>
             <span className="mr-4">{Number(employee.payAmount/10**18)}</span>
-            <span className="mr-4">{Number(incommingBalance)}</span>
+           <span>inflow: <span className="mr-4">{Number(incommingBalance)}</span> </span> 
             
           </div>
           <div className="flex justify-between items-center text-white">
