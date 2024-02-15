@@ -390,7 +390,7 @@ getUserCusdxBalance();
 getUserCusdxStream()
   },[])
   return (
-    <div className="md:flex justify-around gap-8 w-full  grid grid-column items-center  h-full relative">
+    <div className="md:flex justify-around gap-16 md:gap-8 w-full  grid grid-column items-center   h-full relative">
  <div className="absolute top-0 left-0 z-10 text-gray-200">
         {toastopen?<Tosts message="Success cUSD Swaping" />:""}
         {toastApproving?<Tosts message="Approving ..." />:""}
