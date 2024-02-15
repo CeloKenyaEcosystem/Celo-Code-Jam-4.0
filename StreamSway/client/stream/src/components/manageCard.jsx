@@ -129,25 +129,29 @@ useEffect(()=>{
   return (
     <>
       {freelancers?.map((employee, index) => (
-         <div key={index}  className="w-full h-1/2">
-        <div className="flex full flex-col mb-10 md:w-3/4   w-full  text-gray-200  rounded-2xl bg-[#2B392B]    ">
-          <div className="flex   md:justify-evenly md:w-full md:flex-row  w-full flex-col md:text-xl text-sm   h-1/2 items-center text-white mb-8 gap-8">
-            <h3>FreeLancer Address: </h3>
-            <span className="flex">
+         <div key={index}  className="w-full h-1/2 ">
+        <div className="flex full flex-col mb-10 md:w-3/4   border border-gray-200 border-r-8 border-b-8 gap-8  w-full  text-black  rounded-2xl bg-white  ">
+          <div className="flex   md:justify-evenly md:w-full md:flex-row  w-full flex-col md:text-xl text-sm   h-1/2 items-center  text-stone-950 mb-8 gap-8">
+            <h3 className=" font-bold" >FreeLancer Address: </h3>
+            <span className="flex text-black">
             {employee.userAddress.substring(0,18)}<h4>...</h4>{employee.userAddress.substring(employee.userAddress.length-18,employee.userAddress.length)}
             </span>
             
           </div>
           <div className="flex  md:justify-stretch  justify-between   text-sm w-full gap-2 items-center">
             <h3 className="ml-4">Amount in CUSD: </h3>
-            <span className="mr-4">{Number(employee.payAmount/10**18)}</span>
+            <span className="mr-4 text-black">{Number(employee.payAmount/10**18)}</span>
             
           </div>
-          <div className="flex justify-between items-center text-black">
-            <button onClick={()=>{handleEndStream(employee.userAddress)}}  className="inline-flex p-2 justify-start items-center w-100 rounded-full text-orange-200">
+          <div className="w-full flex justify-end  items-center ">
+
+          
+          <div className="flex  items-center w-20 shadow-md rounded-lg  text-white border bg-black m-4">
+            <button onClick={()=>{handleEndStream(employee.userAddress)}}  className="inline-flex p-2 justify-end items-center w-100 rounded-full   text-white">
               Revoke
             </button>
             
+          </div>
           </div>
         </div>
         </div>
