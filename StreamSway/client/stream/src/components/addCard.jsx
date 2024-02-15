@@ -19,9 +19,9 @@ const AddCard = () => {
   
 
   const addUser = async () => {
-    if (window.ethereum || window.ethereum.isMiniPay) {
+    if (window.ethereum || window.ethereum?.isMiniPay) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = await provider.getSigner(address);
+      const signer = provider.getSigner(address);
       console.log("address", address);
       try {
         setTost(true);
@@ -40,9 +40,13 @@ setIsAdd(false)
         },5000)
       } catch (error) {
         console.log(error);
+        setTost(false);
+setIsAdd(false)
       }
     } else {
       console.error("MiniPay provider not detected");
+      setTost(false);
+setIsAdd(true)
     }
   }
 
