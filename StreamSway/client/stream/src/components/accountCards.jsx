@@ -9,7 +9,10 @@ import {celoABI,CusdABI } from "../ABI/abi";
 import { BigNumber } from "ethers";
 import Tosts from "./Toast";
 
+
+
 const AccountCards = () => {
+ 
   const [approveAmount, setApproveAmount] = useState("");
   const [upgradeAmount, setUpgradeAmount] = useState("");
   const [downgradeAmount, setDowngradeAmount] = useState("");
@@ -317,7 +320,7 @@ setDownGradeTost(false);
                 "user balance now", userbalancercusdx.availableBalance
             );
             console.log("useflow rate", await userflow);
-        }, 1000); // Update every second
+        }, 1); // Update every second
     } catch (error) {
         console.log(
             "cusdx balance failed!"
