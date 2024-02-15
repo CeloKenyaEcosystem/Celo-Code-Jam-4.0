@@ -271,33 +271,37 @@ const removeFreeeLancer = async()=>{
     <>
     {/* {freelancers ==null || freelancers == undefined?<Toast message="Please Add Users!!"/>:""} */}
       {freelancers?.map((employee, index) => (
-        <div key={index} className="w-full  h-1/4 md:h-1/2 items-center ">
+        <div key={index} className="w-4/5 h-50% md:h-1/2 items-center justify-center  ">
 
         
-        <div className="flex full flex-col mb-10 md:w-3/4  h-full  w-full  text-gray-200   bg-[#2B392B] rounded-2xl   ">
-          <div className="flex   md:justify-evenly md:w-full md:flex-row  w-full flex-col md:text-xl text-sm   h-1/2 items-center text-white mb-8 gap-8 ">
-            <h3 className="text-white">FreeLancer Address: </h3>
+        <div className="flex full flex-col gap-8 md:w-3/4  h-full  w-full  border border-gray-300  border-r-8 border-b-8   bg-white text-black rounded-2xl   ">
+          <div className="flex   md:justify-evenly md:w-full md:flex-row  w-full flex-col md:text-xl text-sm   h-1/2 items-center text-black mb-8 gap-8 ">
+            <h3 className="text-black font-bold">FreeLancer Address: </h3>
             <span className="flex ">
             {employee.userAddress.substring(0,15)}<h4>...</h4>{employee.userAddress.substring(employee.userAddress.length-8,employee.userAddress.length)}
             </span>
             
           </div>
-          <div className="flex  md:justify-stretch  justify-between  md:text-xl text-sm w-full gap-2 items-center text-white ">
-            <h3 className="ml-4">Amount in Cusd: </h3>
+          <div className="flex  md:justify-stretch  justify-between  md:text-xl text-sm w-full gap-2 items-center text-black ">
+            <h3 className="ml-4 text-black">Amount in Cusd: </h3>
             <span className="mr-4">{Number(employee.payAmount/10**18)}</span>
-           <span>inflow: <span className="mr-4">{Number(incommingBalance)}</span> </span> 
+           <span className="text-black">inflow: <span className="mr-4 text-green-400">{Number(incommingBalance)}</span> </span> 
             
           </div>
-          <div className="flex justify-between items-center text-white">
+          <div className="flex justify-end items-center w-full ">
+
+         
+          <div className={`flex  items-center text-white w-25 m-4 `}>
             {userindex !==index? <button onClick={()=>{setFreelancerAddress(employee.userAddress);setUserIndex(index)}} className="inline-flex pl-2 justify-center items-center w-100 rounded-full text-red-500">
               End Contract
-            </button>: <button onClick={()=>{removeFreeeLancer()}} className="inline-flex pl-2 justify-center items-center  w-100 rounded-full text-yellow-500">
+            </button>: <button onClick={()=>{removeFreeeLancer()}} className="inline-flex pl-2 justify-center items-center  w-100 rounded-full text-green-500">
               Approve
             </button>}
           
            
             
             
+          </div>
           </div>
         </div>
         </div>
