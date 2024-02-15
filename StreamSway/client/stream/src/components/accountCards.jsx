@@ -9,7 +9,10 @@ import {celoABI,CusdABI } from "../ABI/abi";
 import { BigNumber } from "ethers";
 import Tosts from "./Toast";
 
+
+
 const AccountCards = () => {
+ 
   const [approveAmount, setApproveAmount] = useState("");
   const [upgradeAmount, setUpgradeAmount] = useState("");
   const [downgradeAmount, setDowngradeAmount] = useState("");
@@ -280,63 +283,53 @@ setDownGradeTost(false);
   async function getUserCusdxStream() {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
-  
+
     const signer = provider.getSigner();
-    console.log("usesrs address",await signer.getAddress())
-  
+    console.log("usesrs address", await signer.getAddress());
+
     const chainId = await window.ethereum.request({ method: "eth_chainId" });
     const sf = await Framework.create({
-      chainId: Number(chainId),
-      provider: provider
+        chainId: Number(chainId),
+        provider: provider
     });
-  
+
     const superSigner = sf.createSigner({ signer: signer });
-  
+
     console.log(signer);
     console.log(await superSigner.getAddress());
     const celox = await sf.loadSuperToken("cUSDx");
-  
+
     console.log(celox);
-  
+
     try {
-      // const downgradeOperation = celox.downgrade({
-      //   amount: ethers.utils.parseEther(amount)
-      // });
-      const userbalancercusdx = celox.realtimeBalanceOf({
-        account: "0xdf089f52f9d8fcc320d6dc97afc1098e88d85f0f",
-        providerOrSigner:provider,
-        timestamp:Date.now()
-      }
-            
-            )
-            const userflow = celox.getFlow({
-               sender: await signer.getAddress(),
-              receiver: "0xdf089f52f9d8fcc320d6dc97afc1098e88d85f0f",
-              providerOrSigner:provider,
-              
+        setInterval(async () => {
+            const userbalancercusdx = await celox.realtimeBalanceOf({
+                account: "0x65E28C9C4Ef1a756d8df1c507b7A84eFcF606fd4",
+                providerOrSigner: provider,
+                timestamp: Date.now()
+            });
+
+            console.log("real time balance", userbalancercusdx.availableBalance);
+           
+            const userflow = await celox.getFlow({
+                sender: await signer.getAddress(),
+                receiver: "0x37c123d902f4383ee13ae8445e2477a364930394",
+                providerOrSigner: provider,
             })
-  
-      
-  
-    //  // const bal = await userbalancercusdx.exec(signer);
-    //  const userbal = await userbalancercusdx;
-    //  setcusdxBalance(userbal/10**18);
-    const firstElement = await userbalancercusdx;
-  
-      console.log(
-        "uer balance now",  firstElement.availableBalance
-      );
- // console.log("userFlow",(await userflow).deposit);
- console.log("useflow rate",await userflow)
-      
+            console.log("flow rate is",userflow.flowRate)
+
+            console.log(
+                "user balance now", userbalancercusdx.availableBalance
+            );
+            
+        }, 1); // Update every second
     } catch (error) {
-      console.log(
-        "cusdx balance failed!"
-      );
-      console.error(error);
+        console.log(
+            "cusdx balance failed!"
+        );
+        console.error(error);
     }
-  }
-  
+}
   async function approveTokens(amount) {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
@@ -397,7 +390,7 @@ getUserCusdxBalance();
 getUserCusdxStream()
   },[])
   return (
-    <div className="md:flex justify-around gap-8 w-full  grid grid-column items-center  h-full relative">
+    <div className="md:flex justify-around gap-16 md:gap-8 w-full  grid grid-column items-center   h-full relative">
  <div className="absolute top-0 left-0 z-10 text-gray-200">
         {toastopen?<Tosts message="Success cUSD Swaping" />:""}
         {toastApproving?<Tosts message="Approving ..." />:""}

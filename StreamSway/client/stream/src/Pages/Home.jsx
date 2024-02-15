@@ -18,7 +18,7 @@ const Home = () => {
             We offer the best services for your needs.
           </p>
           <div className="flex justify-center">
-            <button onClick={()=>{navigate("/add")}} className="px-8 py-3 bg-green-500 text-white font-semibold rounded-md shadow-md hover:bg-red-600">
+            <button onClick={()=>{navigate("/land")}} className="px-8 py-3 bg-green-500 text-white font-semibold rounded-md shadow-md hover:bg-red-600">
               Get Started
             </button>
           </div>

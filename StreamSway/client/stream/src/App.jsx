@@ -36,9 +36,9 @@ function App() {
     <WagmiConfig config={wagmiConfig}>
       <BrowserRouter>
       <Routes>
-        {/* <Route path='/' element={<Home/>}/> */}
-        <Route path='/' element={<HomeBar/>}/>
-        <Route path='home' element={<HomeBar/>}/>
+        <Route path='/' element={<Home/>}/>
+        <Route path='land' element={<HomeBar/>}/>
+        <Route path='home' element={<Home/>}/>
         <Route path='add' element={<AddFreelancer/>}/>
         <Route path='manage' element={<Manage/>}/>
         <Route path='stream' element={<Stream/>}/>

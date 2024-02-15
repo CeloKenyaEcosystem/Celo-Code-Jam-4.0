@@ -6,6 +6,7 @@ import { GigProContract } from "../Constant/gigprocontract";
 import gigproAbi from "../ABI/GigPro.json";
 import { ethers, Contract } from "ethers";
 import Tosts from "./Toast"; // Make sure you have the correct import for Tosts component
+import { Spinner } from "./spinner";
 
 const AddCard = () => {
   const [freelancerAddress, setFreelancerAddress] = useState();
@@ -13,6 +14,9 @@ const AddCard = () => {
   const [toastopen, setTost] = useState(false);
 
   const { address, connector, isConnected } = useAccount();
+  const [isadd,setIsAdd] = useState(false);
+
+  
 
   const addUser = async () => {
     if (window.ethereum || window.ethereum.isMiniPay) {
@@ -21,6 +25,7 @@ const AddCard = () => {
       console.log("address", address);
       try {
         setTost(true);
+        setIsAdd(true)
         const GigProContracts = new Contract(
           GigProContract,
           gigproAbi,
@@ -31,6 +36,7 @@ const AddCard = () => {
         
         setTimeout(()=>{
 setTost(false);
+setIsAdd(false)
         },5000)
       } catch (error) {
         console.log(error);
@@ -50,6 +56,7 @@ setTost(false);
   const addFreelancer = async () => {
     try {
       if (freelancerAddress != undefined && amount != undefined) {
+        
          await add();
         await addUser();
       } else {
@@ -62,10 +69,13 @@ setTost(false);
 
   return (
     <div className="w-full h-full flex flex-col justify-between rounded-xl  relative">
+        
+    
       <div className="absolute top-0 left-0 z-10 text-gray-200 ">
         {toastopen?<Tosts message="Adding User ..." />:""}
        {/* Tosts component is placed here */}
       </div>
+      {isadd?<Spinner size={50}/>:
       
       <div className="flex h-1/2 md:h-3/4 flex-col gap-40 pt-5 relative z-0 ">
      
@@ -86,7 +96,7 @@ setTost(false);
           </div>
           
         </div>
-      </div>
+      </div>}
     </div>
   );
 };

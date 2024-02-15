@@ -18,7 +18,7 @@ const Account = ()=>{
                 
                 
                 {/* <SideBar/> */}
-                <div className="w-full  h-1/2 ml-10 ">
+                <div className="w-full  h-1/2 justify-center   ">
                     
                     <AccountCards/>
                 
