@@ -304,22 +304,24 @@ setDownGradeTost(false);
     try {
         setInterval(async () => {
             const userbalancercusdx = await celox.realtimeBalanceOf({
-                account: "0xdf089f52f9d8fcc320d6dc97afc1098e88d85f0f",
+                account: "0x65E28C9C4Ef1a756d8df1c507b7A84eFcF606fd4",
                 providerOrSigner: provider,
                 timestamp: Date.now()
             });
 
             console.log("real time balance", userbalancercusdx.availableBalance);
-            const userflow = celox.getFlow({
+           
+            const userflow = await celox.getFlow({
                 sender: await signer.getAddress(),
-                receiver: "0xdf089f52f9d8fcc320d6dc97afc1098e88d85f0f",
+                receiver: "0x37c123d902f4383ee13ae8445e2477a364930394",
                 providerOrSigner: provider,
             })
+            console.log("flow rate is",userflow.flowRate)
 
             console.log(
                 "user balance now", userbalancercusdx.availableBalance
             );
-            console.log("useflow rate", await userflow);
+            
         }, 1); // Update every second
     } catch (error) {
         console.log(

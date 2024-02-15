@@ -17,6 +17,7 @@ const MyFreelancerCard = () => {
   const { address, connector, isConnected } = useAccount();
   const [userstreambal,setUserStreamBal]= useState();
   const [userindex,setUserIndex]= useState(null);
+  const [incommingBalance,setIncommingBalance] = useState(0);
   
   
   const  getFreelancers = async()=>{
@@ -193,8 +194,71 @@ const removeFreeeLancer = async()=>{
     { address: '0x8878787874827487vdfjdfywetf6f23276r', amount: '4000' },
   ];
   const addis ="0x65E28C9C4Ef1a756d8df1c507b7A84eFcF606fd4"
+
+  async function getUserCusdxStream() {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+
+    const signer = provider.getSigner();
+    console.log("usesrs address", await signer.getAddress());
+
+    const chainId = await window.ethereum.request({ method: "eth_chainId" });
+    const sf = await Framework.create({
+        chainId: Number(chainId),
+        provider: provider
+    });
+
+    const superSigner = sf.createSigner({ signer: signer });
+
+    console.log(signer);
+    console.log(await superSigner.getAddress());
+    const celox = await sf.loadSuperToken("cUSDx");
+    
+
+    console.log(celox);
+
+    try {
+        setInterval(async () => {
+            const userbalancercusdx = await celox.realtimeBalanceOf({
+                account: "0x65E28C9C4Ef1a756d8df1c507b7A84eFcF606fd4",
+                providerOrSigner: provider,
+                timestamp: Date.now()
+            });
+            const totaluserbalancercusdx = await celox.balanceOf({
+              account: "0x65E28C9C4Ef1a756d8df1c507b7A84eFcF606fd4",
+              providerOrSigner:provider
+            })
+            
+            console.log("totalUserBalance",totaluserbalancercusdx)
+            
+            const userflow = await celox.getFlow({
+              
+                sender: await signer.getAddress(),
+                receiver: "0x65E28C9C4Ef1a756d8df1c507b7A84eFcF606fd4",
+                providerOrSigner: provider,
+            })
+            const u = await celox.getAccountFlowInfo({
+              account: "0x65E28C9C4Ef1a756d8df1c507b7A84eFcF606fd4",
+              providerOrSigner: provider,
+          })
+          console.log("user flow user flow",userflow.flowRate)
+         
+           let userbal = userbalancercusdx.availableBalance;
+            userbal += (userflow.flowRate); // Adding the flow rate to the balance
+            setIncommingBalance(userbal/10**24); 
+            
+            
+        }, 1); // Update every second
+    } catch (error) {
+        console.log(
+            "cusdx balance failed!"
+        );
+        console.error(error);
+    }
+}
  useEffect(()=>{
   getFreelancers();
+  getUserCusdxStream()
   // const interval = setInterval(() => {
   //   getUserCusdxStream();
   // }, 1000); // 1000 milliseconds = 1 second
@@ -202,16 +266,16 @@ const removeFreeeLancer = async()=>{
   // // Cleanup the interval when the component unmounts
   // return () => clearInterval(interval);
   //getUserFlow(addis);
- },[address]);
+ },[address,incommingBalance]);
   return (
     <>
     {/* {freelancers ==null || freelancers == undefined?<Toast message="Please Add Users!!"/>:""} */}
       {freelancers?.map((employee, index) => (
-        <div className="flex  w-full h-1/2 items-center gap-4">
+        <div key={index} className="w-full h-1/4 md:h-1/2 items-center ">
 
         
-        <div key={index} className=" full  mb-10 md:w-3/4   w-full  text-gray-200   bg-[#2B392B] rounded-2xl   ">
-          <div className="   md:justify-evenly md:w-full md:flex-row  w-full  md:text-xl text-sm   h-1/2 items-center text-white mb-8 gap-8 ">
+        <div className="flex full flex-col mb-10 md:w-3/4  h-full  w-full  text-gray-200   bg-[#2B392B] rounded-2xl   ">
+          <div className="flex   md:justify-evenly md:w-full md:flex-row  w-full flex-col md:text-xl text-sm   h-1/2 items-center text-white mb-8 gap-8 ">
             <h3 className="text-white">FreeLancer Address: </h3>
             <span className="flex ">
             {employee.userAddress.substring(0,15)}<h4>...</h4>{employee.userAddress.substring(employee.userAddress.length-8,employee.userAddress.length)}
@@ -221,6 +285,7 @@ const removeFreeeLancer = async()=>{
           <div className="flex  md:justify-stretch  justify-between  md:text-xl text-sm w-full gap-2 items-center text-white ">
             <h3 className="ml-4">Amount in Cusd: </h3>
             <span className="mr-4">{Number(employee.payAmount/10**18)}</span>
+            <span className="mr-4">{Number(incommingBalance)}</span>
             
           </div>
           <div className="flex justify-between items-center text-white">
