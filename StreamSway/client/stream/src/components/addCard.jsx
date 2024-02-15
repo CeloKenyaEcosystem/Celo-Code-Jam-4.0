@@ -40,9 +40,13 @@ setIsAdd(false)
         },5000)
       } catch (error) {
         console.log(error);
+        setTost(false);
+setIsAdd(false)
       }
     } else {
       console.error("MiniPay provider not detected");
+      setTost(false);
+setIsAdd(true)
     }
   }
 
