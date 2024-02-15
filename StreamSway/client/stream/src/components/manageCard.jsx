@@ -6,11 +6,13 @@ import gigproAbi from "../ABI/GigPro.json";
 import { useAccount } from 'wagmi'
 import {Framework} from "@superfluid-finance/sdk-core"
 import {ethers,Contract} from "ethers"
+import { Spinner } from "./spinner";
 
 
 const ManageCard = () => {
   const { address, isConnecting, isDisconnected } = useAccount()
   const [freelancers,setFreeLancers] = useState([]);
+  const [isadd,setIsAdd] = useState(false);
 
   const  getFreelancers = async()=>{
     if (window.ethereum || window.ethereum.isMiniPay) {
@@ -108,18 +110,22 @@ async function endStreamFlow(recipient) {
 }
 //handle delete stream
 const handleEndStream = async(freeLancerAddress)=>{
+  setIsAdd(true)
   try{
     if(freeLancerAddress != undefined ){
       
       await endStreamFlow(freeLancerAddress);
       
       //setOpen(false);
+      setIsAdd(false)
     }else{
       alert("please provide the address");
+      setIsAdd(false)
     }
    
   }catch(err){
     console.log("error is", err);
+    setIsAdd(false)
   }
   
 }
@@ -128,8 +134,10 @@ useEffect(()=>{
  },[address]);
   return (
     <>
+    
       {freelancers?.map((employee, index) => (
          <div key={index}  className="w-full h-1/2 ">
+          { isadd?<div className="flex justify-center  items-baseline h-screen w-full"><Spinner size={100}/></div>:
         <div className="flex full flex-col mb-10 md:w-3/4   border border-gray-200 border-r-8 border-b-8 gap-8  w-full  text-black  rounded-2xl bg-white  ">
           <div className="flex   md:justify-evenly md:w-full md:flex-row  w-full flex-col md:text-xl text-sm   h-1/2 items-center  text-stone-950 mb-8 gap-8">
             <h3 className=" font-bold" >FreeLancer Address: </h3>
@@ -153,9 +161,10 @@ useEffect(()=>{
             
           </div>
           </div>
-        </div>
+        </div>}
         </div>
       ))}
+
     </>
   );
 };
