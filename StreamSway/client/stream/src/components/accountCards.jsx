@@ -8,7 +8,7 @@ import { Framework } from "@superfluid-finance/sdk-core";
 import {celoABI,CusdABI } from "../ABI/abi";
 import { BigNumber } from "ethers";
 import Tosts from "./Toast";
-
+import { Spinner } from "./spinner";
 
 
 const AccountCards = () => {
@@ -21,6 +21,8 @@ const AccountCards = () => {
   const [downgrade, setdowngrade] = useState(
     false
   );
+  const [isadd,setIsAdd] = useState(false);
+  const [isaddcusd,setIsAddCusd] = useState(false);
   const [usercsdBalance,setUserCusdBalance] = useState(0);
   const [usercusdxbalance,setcusdxBalance] = useState(0);
   const [toastopen, setTost] = useState(false);
@@ -120,6 +122,7 @@ setApprovingTost(false);
     }
   }
     async function upgradeTokens(amount) {
+      setIsAddCusd(true)
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         await provider.send("eth_requestAccounts", []);
       
@@ -148,8 +151,10 @@ setApprovingTost(false);
       
           await upgradeOperation.exec(signer);
           setTost(true);
+          
         setTimeout(()=>{
 setTost(false);
+setIsAddCusd(false)
         },6000)
       
           console.log(
@@ -165,6 +170,7 @@ setTost(false);
           `
           );
         } catch (error) {
+          setIsAddCusd(false)
           console.log(
             "Hmmm, your transaction threw an error. Make sure that this stream does not already exist, and that you've entered a valid Ethereum address!"
           );
@@ -174,6 +180,7 @@ setTost(false);
       //another
       //where the Superfluid logic takes place
 async function downgradeTokens(amount) {
+  setIsAdd(true);
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
   
@@ -205,6 +212,7 @@ async function downgradeTokens(amount) {
         setTimeout(()=>{
 setDownGradeTost(false);
         },6000)
+        setIsAdd(false);
   
       console.log(
         `Congrats - you've just downgraded your tokens
@@ -219,6 +227,7 @@ setDownGradeTost(false);
       `
       );
     } catch (error) {
+      setIsAdd(false)
       console.log(
         "Hmmm, your transaction threw an error. Make sure that this stream does not already exist, and that you've entered a valid Ethereum address!"
       );
@@ -401,12 +410,15 @@ getUserCusdxStream()
   },[])
   return (
     <div className="md:flex justify-around gap-16 md:gap-8 w-full  grid grid-column items-center   h-full relative">
- <div className="absolute top-0 left-0 z-10 text-gray-200">
+ 
+  <div className="w-80 h-70 flex flex-col justify-between rounded-xl bg-black relative z-0">
+  <div className="absolute top-0 left-0 z-10 text-gray-200">
         {toastopen?<Tosts message="Success cUSD Swaping" />:""}
         {toastApproving?<Tosts message="Approving ..." />:""}
+        
+        {isaddcusd?<Spinner size={50} />:""}
        {/* Tosts component is placed here */}
       </div>
-  <div className="w-80 h-70 flex flex-col justify-between rounded-xl bg-black relative z-0">
     <h2 className="text-center text-xl font-semibold mb-5 text-gray-200">Cusd to Cusdx</h2>
     <div className="flex h-full flex-col gap-12 pt-5">
      
@@ -430,6 +442,8 @@ getUserCusdxStream()
   </div>
 
   <div className="w-full md:w-1/4 h-full flex flex-col justify-between rounded-xl bg-black relative z-0">
+  {isadd?<Spinner size={50} />:""}
+  
   <div className="absolute top-0 left-0 z-10 text-gray-200">
         {toastDownopen?<Tosts message="Success cUSDX Swaping" />:""}
        {/* Tosts component is placed here */}
