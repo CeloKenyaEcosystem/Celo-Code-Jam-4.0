@@ -1,4 +1,5 @@
 import React from "react";
+import { useState,useEffect } from "react";
 import {
     Menu,
     MenuHandler,
@@ -9,7 +10,21 @@ import {
 import { Web3Button } from "@web3modal/react";
 import { useNavigate } from "react-router-dom";
 import {MdMenu} from "react-icons/md"
+import { useConnect } from "wagmi";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { InjectedConnector } from "wagmi/connectors/injected";
 const Navbar = ()=>{
+  const [hideConnectBtn, setHideConnectBtn] = useState(false);
+  const { connect } = useConnect({
+      connector: new InjectedConnector(),
+  });
+
+  useEffect(() => {
+      if (window.ethereum && window.ethereum.isMiniPay) {
+          setHideConnectBtn(true);
+          connect();
+      }
+  }, []);
     const navigate = useNavigate();
     return(
         <div className="h-10 w-full flex justify-between items-center text-black  ">
@@ -70,16 +85,16 @@ const Navbar = ()=>{
 <div className=" animate-pulse p-5">
 <button onClick={()=>{navigate("/home")}}>StreamSway</button>
 </div>
-<div className="p-5 pt-10">
-  {window.ethereum?.isMiniPay?"":<Web3Button themeVariables={{
-    '--w3m-font-family': 'Roboto, sans-serif',
-    '--w3m-accent-color': '#FF0000.'
-    
-  }}
-  />
-  }
-
-</div>
+<div className="p-5 pt-10  h-full">
+                                {!hideConnectBtn && (
+                                    <Web3Button themeVariables={{
+                                      '--w3m-font-family': 'Roboto, sans-serif',
+                                      '--w3m-accent-color': '#FF0000.'
+                                      
+                                    }}
+                                    />
+                                )}
+                            </div>
 
         </div>
 

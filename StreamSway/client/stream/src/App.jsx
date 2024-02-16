@@ -14,8 +14,13 @@ import { Web3Modal } from '@web3modal/react'
 import { configureChains, createConfig, WagmiConfig } from 'wagmi'
 import { celo } from 'wagmi/chains'
 import { CreateFlow } from './Pages/Create'
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
 
 import HomeBar from './Pages/HomeBar'
+
+const appInfo = {
+  appName: "Stream Sway",
+};
 
 
 const chains = [celo]
@@ -34,6 +39,7 @@ function App() {
   return (
     <>
     <WagmiConfig config={wagmiConfig}>
+    <RainbowKitProvider chains={chains} appInfo={appInfo} coolMode={true}>
       <BrowserRouter>
       <Routes>
         <Route path='/' element={<Home/>}/>
@@ -47,6 +53,7 @@ function App() {
         <Route path='celo-celox' element={<Account/>}/>
       </Routes>
       </BrowserRouter>
+      </RainbowKitProvider>
       </WagmiConfig>
       <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
     </>
