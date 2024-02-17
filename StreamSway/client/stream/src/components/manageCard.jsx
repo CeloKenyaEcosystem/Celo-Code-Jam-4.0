@@ -39,12 +39,12 @@ const ManageCard = () => {
       console.error("MiniPay provider not detected");
   }
 }
-  // const { data:myFreelancers, isError, isLoading } = useContractRead({
-  //   address: GigProContract,
-  //   abi: gigproAbi,
-  //   functionName: 'getFreeLancersByOwner',
-  //   args: [address]
-  // })
+  const { data:myFreelancers, isError, isLoading } = useContractRead({
+    address: GigProContract,
+    abi: gigproAbi,
+    functionName: 'getFreeLancersByOwner',
+    args: [address]
+  })
   // console.log("addressis:,",myFreelancers);
   const employess = [
     { address: '0x8878787874827487vdfjdfywetf6f23276r', amount: '4000' },
@@ -130,25 +130,25 @@ const handleEndStream = async(freeLancerAddress)=>{
   
 }
 useEffect(()=>{
-  getFreelancers()
- },[address]);
+  //getFreelancers()
+ },[address,myFreelancers]);
   return (
     <>
     
-      {freelancers?.map((employee, index) => (
+      {myFreelancers?.map((employee, index) => (
          <div key={index}  className="w-full h-1/2 ">
           { isadd?<div className="flex justify-center  items-baseline h-screen w-full"><Spinner size={100}/></div>:
         <div className="flex full flex-col mb-10 md:w-3/4   border border-gray-200 border-r-8 border-b-8 gap-8  w-full  text-black  rounded-2xl bg-white  ">
           <div className="flex   md:justify-evenly md:w-full md:flex-row  w-full flex-col md:text-xl text-sm   h-1/2 items-center  text-stone-950 mb-8 gap-8">
             <h3 className=" font-bold" >FreeLancer Address: </h3>
-            <span className="flex text-black">
-            {employee.userAddress.substring(0,18)}<h4>...</h4>{employee.userAddress.substring(employee.userAddress.length-18,employee.userAddress.length)}
+            <span className="flex text-black text-sm">
+            {employee.userAddress.substring(0,5)}...{employee.userAddress.substring(employee.userAddress.length-18,employee.userAddress.length)}
             </span>
             
           </div>
           <div className="flex  md:justify-stretch  justify-between   text-sm w-full gap-2 items-center">
             <h3 className="ml-4">Amount in CUSD: </h3>
-            <span className="mr-4 text-black">{Number(employee.payAmount/10**18)}</span>
+            <span className="mr-4 text-black">{Number(employee.payAmount)/10**18}</span>
             
           </div>
           <div className="w-full flex justify-end  items-center ">
