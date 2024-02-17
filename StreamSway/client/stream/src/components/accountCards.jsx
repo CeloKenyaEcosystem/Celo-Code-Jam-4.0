@@ -420,7 +420,7 @@ setDownGradeTost(false);
     };
   
     fetchBalances();
-  }, []);
+  }, [usercsdBalance,usercusdxbalance]);
   return (
     <div className="md:flex justify-around gap-16 md:gap-8 w-full  grid grid-column items-center   h-full relative">
  
