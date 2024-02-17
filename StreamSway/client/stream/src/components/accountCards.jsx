@@ -114,7 +114,8 @@ setApprovingTost(false);
      
       
       const userbal = bal.toString()/10**18;
-      setUserCusdBalance(userbal);
+     // setUserCusdBalance(userbal);
+      return userbal;
       console.log("user balance",userbal);
     } catch (error) {
       console.log(
@@ -273,9 +274,10 @@ setDownGradeTost(false);
   
      // const bal = await userbalancercusdx.exec(signer);
      const userbal = await userbalancercusdx;
-     setcusdxBalance(userbal/10**18);
+    //  setcusdxBalance(userbal/10**18);
      
       setLoadingBalance(false);
+      return userbal;
            
   
       console.log(
@@ -405,11 +407,20 @@ setDownGradeTost(false);
   const handleDowngradeAmountChange = (e) => {
     setDowngradeAmount(e.target.value);
   };
-  useEffect(()=>{
-getUserBalance();
-getUserCusdxBalance();
-//getUserCusdxStream()
-  },[usercsdBalance,usercusdxbalance])
+  useEffect(() => {
+    const fetchBalances = async () => {
+      try {
+        const userCusdBalance = await getUserBalance();
+        const userCusdxBalance = await getUserCusdxBalance();
+        setUserCusdBalance(userCusdBalance);
+        setcusdxBalance(userCusdxBalance);
+      } catch (error) {
+        // Handle errors
+      }
+    };
+  
+    fetchBalances();
+  }, []);
   return (
     <div className="md:flex justify-around gap-16 md:gap-8 w-full  grid grid-column items-center   h-full relative">
  
