@@ -168,9 +168,9 @@ const removeFreeeLancer = async()=>{
    
      
       if(freeLancerAddress != undefined){
-        await removeFreeLancer();
+        //await removeFreeLancer();
         
-        //await removeFreeeLancers();
+        await removeFreeeLancers();
       }
       else{
         console.log("the address is not set");
@@ -180,7 +180,7 @@ const removeFreeeLancer = async()=>{
 
   }catch(err){
     console.log("err ihjgerujiugirunir  iruh54iyolow",err);
-    alert("failed ....")
+    alert("failed ....",err)
   }
 }
   const employess = [
