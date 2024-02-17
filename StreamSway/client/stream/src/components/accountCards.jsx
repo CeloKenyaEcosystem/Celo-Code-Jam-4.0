@@ -277,7 +277,7 @@ setDownGradeTost(false);
     //  setcusdxBalance(userbal/10**18);
      
       setLoadingBalance(false);
-      return userbal;
+      return (userbal/10**18);
            
   
       console.log(
