@@ -23,7 +23,7 @@ const MyFreelancerCard = () => {
   const  getFreelancers = async()=>{
     if (window.ethereum || window.ethereum.isMiniPay) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = await  provider.getSigner(address);
+      const signer =   provider.getSigner(address);
       console.log("address yollow",await signer.getAddress());
       try{
   
@@ -124,12 +124,12 @@ async function getUserCusdxStream() {
       }
     }
   
-  // const { data:myFreelancers, isError, isLoading } = useContractRead({
-  //   address: GigProContract,
-  //   abi: gigproAbi,
-  //   functionName: 'getFreeLancersByOwner',
-  //   args: [address]
-  // })
+  const { data:myFreelancers, isError, isLoading } = useContractRead({
+    address: GigProContract,
+    abi: gigproAbi,
+    functionName: 'getFreeLancersByOwner',
+    args: [address]
+  })
   console.log("addressis:,",freelancers);
   const removeFreeeLancers = async()=>{
     if (window.ethereum || window.ethereum.isMiniPay) {
@@ -168,9 +168,9 @@ const removeFreeeLancer = async()=>{
    
      
       if(freeLancerAddress != undefined){
-        //await removeFreeLancer();
-        alert("approving ....")
-        await removeFreeeLancers();
+        await removeFreeLancer();
+        
+        //await removeFreeeLancers();
       }
       else{
         console.log("the address is not set");
@@ -257,7 +257,7 @@ const removeFreeeLancer = async()=>{
     }
 }
  useEffect(()=>{
-  getFreelancers();
+  //getFreelancers();
   getUserCusdxStream()
   // const interval = setInterval(() => {
   //   getUserCusdxStream();
@@ -266,11 +266,11 @@ const removeFreeeLancer = async()=>{
   // // Cleanup the interval when the component unmounts
   // return () => clearInterval(interval);
   //getUserFlow(addis);
- },[address,incommingBalance]);
+ },[address,incommingBalance,myFreelancers]);
   return (
     <>
     {/* {freelancers ==null || freelancers == undefined?<Toast message="Please Add Users!!"/>:""} */}
-      {freelancers?.map((employee, index) => (
+      {myFreelancers?.map((employee, index) => (
         <div key={index} className="w-4/5 h-50% md:h-1/2 items-center justify-center mb-4  ">
 
         
@@ -284,7 +284,7 @@ const removeFreeeLancer = async()=>{
           </div>
           <div className="flex  md:justify-stretch  justify-between  md:text-xl text-sm w-full gap-2 items-center text-black ">
             <h3 className="ml-4 text-black">Amount in Cusd: </h3>
-            <span className="mr-4">{Number(employee.payAmount/10**18)}</span>
+            <span className="mr-4">{Number(employee.payAmount)/10**18}</span>
            <span className="text-black">inflow: <span className="mr-4 text-green-400">{Number(incommingBalance)}</span> </span> 
             
           </div>
