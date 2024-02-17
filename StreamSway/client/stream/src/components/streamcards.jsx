@@ -58,12 +58,12 @@ const StreamCard = () => {
   }
 }
   
-  // const { data:myFreelancers, isError, isLoading } = useContractRead({
-  //   address: GigProContract,
-  //   abi: gigproAbi,
-  //   functionName: 'getFreeLancersByOwner',
-  //   args: [address]
-  // })
+  const { data:myFreelancers, isError, isLoading } = useContractRead({
+    address: GigProContract,
+    abi: gigproAbi,
+    functionName: 'getFreeLancersByOwner',
+    args: [address]
+  })
   // console.log("addressis:,",myFreelancers);
   const employess = [
     { address: '0x8878787874827487vdfjdfywetf6f23276r', amount: '4000' },
@@ -148,6 +148,7 @@ const StreamCard = () => {
         console.log("flow rate and recepient undefined");
       }
     } catch (error) {
+      
       console.log(
         "Hmmm, your transaction threw an error. Make sure that this stream does not already exist, and that you've entered a valid Ethereum address!"
       );
@@ -308,12 +309,12 @@ async function updateStreamFlow(recipient) {
 
     useEffect(()=>{
       getFreelancers()
-     },[address]);
+     },[address,myFreelancers]);
 
 
   return (
     <>
-      {freelancers?.map((employee, index) => (
+      {myFreelancers?.map((employee, index) => (
         <div key={index} className="flex h-full  flex-col gap-8 text-black mb-4 border-b border-red-500">
           <div className="flex justify-evenly w-full gap-4 items-center md:text-xl  text-xs">
             <h3>FreeLancer Address: </h3>
@@ -324,7 +325,7 @@ async function updateStreamFlow(recipient) {
           </div>
           <div className="flex  justify-stretch w-full gap-4 items-center md:text-xl  text-xs">
             <h3>Amount in Cusd: </h3>
-            <span className="">{Number(employee.payAmount/10**18)}</span>
+            <span className="">{Number(employee.payAmount)/10**18}</span>
             
           </div>
           <div className="flex justify-between items-center ">

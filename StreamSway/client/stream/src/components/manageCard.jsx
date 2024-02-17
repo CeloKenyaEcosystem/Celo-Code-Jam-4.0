@@ -124,13 +124,14 @@ const handleEndStream = async(freeLancerAddress)=>{
     }
    
   }catch(err){
-    console.log("error is", err);
     setIsAdd(false)
+    console.log("error is", err);
+    
   }
   
 }
 useEffect(()=>{
-  //getFreelancers()
+  getFreelancers()
  },[address,myFreelancers]);
   return (
     <>
