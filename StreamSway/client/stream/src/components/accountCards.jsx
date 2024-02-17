@@ -9,6 +9,7 @@ import {celoABI,CusdABI } from "../ABI/abi";
 import { BigNumber } from "ethers";
 import Tosts from "./Toast";
 import { Spinner } from "./spinner";
+import { useAccount } from 'wagmi'
 
 
 const AccountCards = () => {
@@ -21,6 +22,7 @@ const AccountCards = () => {
   const [downgrade, setdowngrade] = useState(
     false
   );
+  const { address, isConnecting, isDisconnected } = useAccount()
   const [isadd,setIsAdd] = useState(false);
   const [isaddcusd,setIsAddCusd] = useState(false);
   const [usercsdBalance,setUserCusdBalance] = useState(0);
@@ -29,7 +31,7 @@ const AccountCards = () => {
   const [toastDownopen, setDownGradeTost] = useState(false);
   const [toastApproving, setApprovingTost] = useState(false);
 
-  const [toastLoadingBalance, setLoadingBalance] = useState(null);
+  const [toastLoadingBalance, setLoadingBalance] = useState(true);
 
   async function approveTokenss(amount) {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -261,7 +263,7 @@ setDownGradeTost(false);
       //   amount: ethers.utils.parseEther(amount)
       // });
       const userbalancercusdx = celox.balanceOf({
-        account: await signer.getAddress(),
+        account: address,
         providerOrSigner:provider
       }
        
@@ -272,9 +274,9 @@ setDownGradeTost(false);
      // const bal = await userbalancercusdx.exec(signer);
      const userbal = await userbalancercusdx;
      setcusdxBalance(userbal/10**18);
-     setTimeout(()=>{
-      setLoadingBalance(userbal/10**18);
-            },1000)
+     
+      setLoadingBalance(false);
+           
   
       console.log(
         "uer balance",  userbal/10**18
@@ -406,7 +408,7 @@ setDownGradeTost(false);
   useEffect(()=>{
 getUserBalance();
 getUserCusdxBalance();
-getUserCusdxStream()
+//getUserCusdxStream()
   },[usercsdBalance,usercusdxbalance])
   return (
     <div className="md:flex justify-around gap-16 md:gap-8 w-full  grid grid-column items-center   h-full relative">
@@ -447,7 +449,7 @@ getUserCusdxStream()
   <div className="absolute top-0 left-0 z-10 text-gray-200">
         {toastDownopen?<Tosts message="Success cUSDX Swaping" />:""}
        {/* Tosts component is placed here */}
-       {toastLoadingBalance ==null?<Tosts message="Loading Balance ..."/>:""}
+       {toastLoadingBalance?<Tosts message="Loading Balance ..."/>:""}
       </div>
     <h2 className="text-center text-xl font-semibold mb-5 text-gray-200">cUSDx to cUSD</h2>
     <div className="flex h-full flex-col gap-12 pt-5">
