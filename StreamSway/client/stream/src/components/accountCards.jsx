@@ -8,8 +8,12 @@ import { Framework } from "@superfluid-finance/sdk-core";
 import {celoABI,CusdABI } from "../ABI/abi";
 import { BigNumber } from "ethers";
 import Tosts from "./Toast";
+import { Spinner } from "./spinner";
+import { useAccount } from 'wagmi'
+
 
 const AccountCards = () => {
+ 
   const [approveAmount, setApproveAmount] = useState("");
   const [upgradeAmount, setUpgradeAmount] = useState("");
   const [downgradeAmount, setDowngradeAmount] = useState("");
@@ -18,13 +22,16 @@ const AccountCards = () => {
   const [downgrade, setdowngrade] = useState(
     false
   );
+  const { address, isConnecting, isDisconnected } = useAccount()
+  const [isadd,setIsAdd] = useState(false);
+  const [isaddcusd,setIsAddCusd] = useState(false);
   const [usercsdBalance,setUserCusdBalance] = useState(0);
   const [usercusdxbalance,setcusdxBalance] = useState(0);
   const [toastopen, setTost] = useState(false);
   const [toastDownopen, setDownGradeTost] = useState(false);
   const [toastApproving, setApprovingTost] = useState(false);
 
-  const [toastLoadingBalance, setLoadingBalance] = useState(null);
+  const [toastLoadingBalance, setLoadingBalance] = useState(true);
 
   async function approveTokenss(amount) {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -107,7 +114,8 @@ setApprovingTost(false);
      
       
       const userbal = bal.toString()/10**18;
-      setUserCusdBalance(userbal);
+     // setUserCusdBalance(userbal);
+      return userbal;
       console.log("user balance",userbal);
     } catch (error) {
       console.log(
@@ -117,6 +125,7 @@ setApprovingTost(false);
     }
   }
     async function upgradeTokens(amount) {
+      setIsAddCusd(true)
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         await provider.send("eth_requestAccounts", []);
       
@@ -145,8 +154,10 @@ setApprovingTost(false);
       
           await upgradeOperation.exec(signer);
           setTost(true);
+          
         setTimeout(()=>{
 setTost(false);
+setIsAddCusd(false)
         },6000)
       
           console.log(
@@ -162,6 +173,7 @@ setTost(false);
           `
           );
         } catch (error) {
+          setIsAddCusd(false)
           console.log(
             "Hmmm, your transaction threw an error. Make sure that this stream does not already exist, and that you've entered a valid Ethereum address!"
           );
@@ -171,6 +183,7 @@ setTost(false);
       //another
       //where the Superfluid logic takes place
 async function downgradeTokens(amount) {
+  setIsAdd(true);
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
   
@@ -202,6 +215,7 @@ async function downgradeTokens(amount) {
         setTimeout(()=>{
 setDownGradeTost(false);
         },6000)
+        setIsAdd(false);
   
       console.log(
         `Congrats - you've just downgraded your tokens
@@ -216,6 +230,7 @@ setDownGradeTost(false);
       `
       );
     } catch (error) {
+      setIsAdd(false)
       console.log(
         "Hmmm, your transaction threw an error. Make sure that this stream does not already exist, and that you've entered a valid Ethereum address!"
       );
@@ -249,7 +264,7 @@ setDownGradeTost(false);
       //   amount: ethers.utils.parseEther(amount)
       // });
       const userbalancercusdx = celox.balanceOf({
-        account: await signer.getAddress(),
+        account: address,
         providerOrSigner:provider
       }
        
@@ -259,10 +274,11 @@ setDownGradeTost(false);
   
      // const bal = await userbalancercusdx.exec(signer);
      const userbal = await userbalancercusdx;
-     setcusdxBalance(userbal/10**18);
-     setTimeout(()=>{
-      setLoadingBalance(userbal/10**18);
-            },1000)
+    //  setcusdxBalance(userbal/10**18);
+     
+      setLoadingBalance(false);
+      return (userbal/10**18);
+           
   
       console.log(
         "uer balance",  userbal/10**18
@@ -391,19 +407,31 @@ setDownGradeTost(false);
   const handleDowngradeAmountChange = (e) => {
     setDowngradeAmount(e.target.value);
   };
-  useEffect(()=>{
-getUserBalance();
-getUserCusdxBalance();
-getUserCusdxStream()
-  },[])
+  useEffect(() => {
+    const fetchBalances = async () => {
+      try {
+        const userCusdBalance = await getUserBalance();
+        const userCusdxBalance = await getUserCusdxBalance();
+        setUserCusdBalance(userCusdBalance);
+        setcusdxBalance(userCusdxBalance);
+      } catch (error) {
+        // Handle errors
+      }
+    };
+  
+    fetchBalances();
+  }, [usercsdBalance,usercusdxbalance]);
   return (
-    <div className="md:flex justify-around gap-8 w-full  grid grid-column items-center  h-full relative">
- <div className="absolute top-0 left-0 z-10 text-gray-200">
+    <div className="md:flex justify-around gap-16 md:gap-8 w-full  grid grid-column items-center   h-full relative">
+ 
+  <div className="w-80 h-70 flex flex-col justify-between rounded-xl bg-black relative z-0">
+  <div className="absolute top-0 left-0 z-10 text-gray-200">
         {toastopen?<Tosts message="Success cUSD Swaping" />:""}
         {toastApproving?<Tosts message="Approving ..." />:""}
+        
+        {isaddcusd?<Spinner size={50} />:""}
        {/* Tosts component is placed here */}
       </div>
-  <div className="w-80 h-70 flex flex-col justify-between rounded-xl bg-black relative z-0">
     <h2 className="text-center text-xl font-semibold mb-5 text-gray-200">Cusd to Cusdx</h2>
     <div className="flex h-full flex-col gap-12 pt-5">
      
@@ -427,10 +455,12 @@ getUserCusdxStream()
   </div>
 
   <div className="w-full md:w-1/4 h-full flex flex-col justify-between rounded-xl bg-black relative z-0">
+  {isadd?<Spinner size={50} />:""}
+  
   <div className="absolute top-0 left-0 z-10 text-gray-200">
         {toastDownopen?<Tosts message="Success cUSDX Swaping" />:""}
        {/* Tosts component is placed here */}
-       {toastLoadingBalance ==null?<Tosts message="Loading Balance ..."/>:""}
+       {toastLoadingBalance?<Tosts message="Loading Balance ..."/>:""}
       </div>
     <h2 className="text-center text-xl font-semibold mb-5 text-gray-200">cUSDx to cUSD</h2>
     <div className="flex h-full flex-col gap-12 pt-5">
@@ -456,313 +486,313 @@ getUserCusdxStream()
 };
 
 export default AccountCards;
-///
-// import React, { useState, useEffect } from "react";
-// import { Framework } from "@superfluid-finance/sdk-core";
-// import {
-//   Button,
-//   Form,
-//   FormGroup,
-//   FormControl,
-//   Spinner,
-//   Card
-// } from "react-bootstrap";
-// import { daiABI } from "./config";
-// import "./createFlow.css";
-// import { ethers } from "ethers";
+// ///
+// // import React, { useState, useEffect } from "react";
+// // import { Framework } from "@superfluid-finance/sdk-core";
+// // import {
+// //   Button,
+// //   Form,
+// //   FormGroup,
+// //   FormControl,
+// //   Spinner,
+// //   Card
+// // } from "react-bootstrap";
+// // import { daiABI } from "./config";
+// // import "./createFlow.css";
+// // import { ethers } from "ethers";
 
-// let account;
+// // let account;
 
-// //where the Superfluid logic takes place
-// async function upgradeTokens(amount) {
-//   const provider = new ethers.providers.Web3Provider(window.ethereum);
-//   await provider.send("eth_requestAccounts", []);
+// // //where the Superfluid logic takes place
+// // async function upgradeTokens(amount) {
+// //   const provider = new ethers.providers.Web3Provider(window.ethereum);
+// //   await provider.send("eth_requestAccounts", []);
 
-//   const signer = provider.getSigner();
+// //   const signer = provider.getSigner();
 
-//   const chainId = await window.ethereum.request({ method: "eth_chainId" });
-//   const sf = await Framework.create({
-//     chainId: Number(chainId),
-//     provider: provider
-//   });
+// //   const chainId = await window.ethereum.request({ method: "eth_chainId" });
+// //   const sf = await Framework.create({
+// //     chainId: Number(chainId),
+// //     provider: provider
+// //   });
 
-//   const superSigner = sf.createSigner({ signer: signer });
+// //   const superSigner = sf.createSigner({ signer: signer });
 
-//   console.log(signer);
-//   console.log(await superSigner.getAddress());
-//   const daix = await sf.loadSuperToken("fDAIx");
+// //   console.log(signer);
+// //   console.log(await superSigner.getAddress());
+// //   const daix = await sf.loadSuperToken("fDAIx");
 
-//   console.log(daix);
+// //   console.log(daix);
 
-//   try {
-//     const upgradeOperation = daix.upgrade({
-//       amount: amount
-//     });
+// //   try {
+// //     const upgradeOperation = daix.upgrade({
+// //       amount: amount
+// //     });
 
-//     console.log("Upgrading...");
+// //     console.log("Upgrading...");
 
-//     await upgradeOperation.exec(signer);
+// //     await upgradeOperation.exec(signer);
 
-//     console.log(
-//       `Congrats - you've just upgraded your tokens to an Index!
-//          Network: Goerli
-//          Super Token: DAIx
-//          Amount: ${amount}         
-//       `
-//     );
+// //     console.log(
+// //       `Congrats - you've just upgraded your tokens to an Index!
+// //          Network: Goerli
+// //          Super Token: DAIx
+// //          Amount: ${amount}         
+// //       `
+// //     );
 
-//     console.log(
-//       `Congrats - you've just distributed to your index!
-//     `
-//     );
-//   } catch (error) {
-//     console.log(
-//       "Hmmm, your transaction threw an error. Make sure that this stream does not already exist, and that you've entered a valid Ethereum address!"
-//     );
-//     console.error(error);
-//   }
-// }
+// //     console.log(
+// //       `Congrats - you've just distributed to your index!
+// //     `
+// //     );
+// //   } catch (error) {
+// //     console.log(
+// //       "Hmmm, your transaction threw an error. Make sure that this stream does not already exist, and that you've entered a valid Ethereum address!"
+// //     );
+// //     console.error(error);
+// //   }
+// // }
 
-// //where the Superfluid logic takes place
-// async function downgradeTokens(amount) {
-//   const provider = new ethers.providers.Web3Provider(window.ethereum);
-//   await provider.send("eth_requestAccounts", []);
+// // //where the Superfluid logic takes place
+// // async function downgradeTokens(amount) {
+// //   const provider = new ethers.providers.Web3Provider(window.ethereum);
+// //   await provider.send("eth_requestAccounts", []);
 
-//   const signer = provider.getSigner();
+// //   const signer = provider.getSigner();
 
-//   const chainId = await window.ethereum.request({ method: "eth_chainId" });
-//   const sf = await Framework.create({
-//     chainId: Number(chainId),
-//     provider: provider
-//   });
+// //   const chainId = await window.ethereum.request({ method: "eth_chainId" });
+// //   const sf = await Framework.create({
+// //     chainId: Number(chainId),
+// //     provider: provider
+// //   });
 
-//   const superSigner = sf.createSigner({ signer: signer });
+// //   const superSigner = sf.createSigner({ signer: signer });
 
-//   console.log(signer);
-//   console.log(await superSigner.getAddress());
-//   const daix = await sf.loadSuperToken("fDAIx");
+// //   console.log(signer);
+// //   console.log(await superSigner.getAddress());
+// //   const daix = await sf.loadSuperToken("fDAIx");
 
-//   console.log(daix);
+// //   console.log(daix);
 
-//   try {
-//     const downgradeOperation = daix.downgrade({
-//       amount: amount
-//     });
+// //   try {
+// //     const downgradeOperation = daix.downgrade({
+// //       amount: amount
+// //     });
 
-//     console.log("downgrading...");
+// //     console.log("downgrading...");
 
-//     await downgradeOperation.exec(signer);
+// //     await downgradeOperation.exec(signer);
 
-//     console.log(
-//       `Congrats - you've just downgraded your tokens
-//          Network: Goerli
-//          Super Token: DAIx
-//          Amount: ${amount}         
-//       `
-//     );
+// //     console.log(
+// //       `Congrats - you've just downgraded your tokens
+// //          Network: Goerli
+// //          Super Token: DAIx
+// //          Amount: ${amount}         
+// //       `
+// //     );
 
-//     console.log(
-//       `Congrats - you've just downgraded
-//     `
-//     );
-//   } catch (error) {
-//     console.log(
-//       "Hmmm, your transaction threw an error. Make sure that this stream does not already exist, and that you've entered a valid Ethereum address!"
-//     );
-//     console.error(error);
-//   }
-// }
+// //     console.log(
+// //       `Congrats - you've just downgraded
+// //     `
+// //     );
+// //   } catch (error) {
+// //     console.log(
+// //       "Hmmm, your transaction threw an error. Make sure that this stream does not already exist, and that you've entered a valid Ethereum address!"
+// //     );
+// //     console.error(error);
+// //   }
+// // }
 
 
 
-// export const SuperTokens = () => {
-//   const [approveAmount, setApproveAmount] = useState("");
-//   const [upgradeAmount, setUpgradeAmount] = useState("");
-//   const [downgradeAmount, setDowngradeAmount] = useState("");
-//   const [isApproveButtonLoading, setIsApproveButtonLoading] = useState(false);
-//   const [isUpgradeButtonLoading, setIsUpgradeButtonLoading] = useState(false);
-//   const [isDowngradeButtonLoading, setIsDowngradeButtonLoading] = useState(
-//     false
-//   );
-//   const [currentAccount, setCurrentAccount] = useState("");
+// // export const SuperTokens = () => {
+// //   const [approveAmount, setApproveAmount] = useState("");
+// //   const [upgradeAmount, setUpgradeAmount] = useState("");
+// //   const [downgradeAmount, setDowngradeAmount] = useState("");
+// //   const [isApproveButtonLoading, setIsApproveButtonLoading] = useState(false);
+// //   const [isUpgradeButtonLoading, setIsUpgradeButtonLoading] = useState(false);
+// //   const [isDowngradeButtonLoading, setIsDowngradeButtonLoading] = useState(
+// //     false
+// //   );
+// //   const [currentAccount, setCurrentAccount] = useState("");
 
-//   function UpgradeButton({ isLoading, children, ...props }) {
-//     return (
-//       <Button variant="success" className="button" {...props}>
-//         {isUpgradeButtonLoading ? <Spinner animation="border" /> : children}
-//       </Button>
-//     );
-//   }
+// //   function UpgradeButton({ isLoading, children, ...props }) {
+// //     return (
+// //       <Button variant="success" className="button" {...props}>
+// //         {isUpgradeButtonLoading ? <Spinner animation="border" /> : children}
+// //       </Button>
+// //     );
+// //   }
 
-//   function DowngradeButton({ isLoading, children, ...props }) {
-//     return (
-//       <Button variant="success" className="button" {...props}>
-//         {isDowngradeButtonLoading ? <Spinner animation="border" /> : children}
-//       </Button>
-//     );
-//   }
+// //   function DowngradeButton({ isLoading, children, ...props }) {
+// //     return (
+// //       <Button variant="success" className="button" {...props}>
+// //         {isDowngradeButtonLoading ? <Spinner animation="border" /> : children}
+// //       </Button>
+// //     );
+// //   }
 
-//   function ApproveButton({ isLoading, children, ...props }) {
-//     return (
-//       <Button variant="success" className="button" {...props}>
-//         {isApproveButtonLoading ? <Spinner animation="border" /> : children}
-//       </Button>
-//     );
-//   }
+// //   function ApproveButton({ isLoading, children, ...props }) {
+// //     return (
+// //       <Button variant="success" className="button" {...props}>
+// //         {isApproveButtonLoading ? <Spinner animation="border" /> : children}
+// //       </Button>
+// //     );
+// //   }
 
-//   const handleApproveAmountChange = (e) => {
-//     setApproveAmount(() => ([e.target.name] = e.target.value));
-//   };
+// //   const handleApproveAmountChange = (e) => {
+// //     setApproveAmount(() => ([e.target.name] = e.target.value));
+// //   };
 
-//   const handleUpgradeAmountChange = (e) => {
-//     setUpgradeAmount(() => ([e.target.name] = e.target.value));
-//   };
+// //   const handleUpgradeAmountChange = (e) => {
+// //     setUpgradeAmount(() => ([e.target.name] = e.target.value));
+// //   };
 
-//   const handleDowngradeAmountChange = (e) => {
-//     setDowngradeAmount(() => ([e.target.name] = e.target.value));
-//   };
+// //   const handleDowngradeAmountChange = (e) => {
+// //     setDowngradeAmount(() => ([e.target.name] = e.target.value));
+// //   };
 
-//   const connectWallet = async () => {
-//     try {
-//       const { ethereum } = window;
+// //   const connectWallet = async () => {
+// //     try {
+// //       const { ethereum } = window;
 
-//       if (!ethereum) {
-//         alert("Get MetaMask!");
-//         return;
-//       }
-//       const accounts = await ethereum.request({
-//         method: "eth_requestAccounts"
-//       });
-//       console.log("Connected", accounts[0]);
-//       setCurrentAccount(accounts[0]);
-//       account = currentAccount;
-//       // Setup listener! This is for the case where a user comes to our site
-//       // and connected their wallet for the first time.
-//       // setupEventListener()
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
+// //       if (!ethereum) {
+// //         alert("Get MetaMask!");
+// //         return;
+// //       }
+// //       const accounts = await ethereum.request({
+// //         method: "eth_requestAccounts"
+// //       });
+// //       console.log("Connected", accounts[0]);
+// //       setCurrentAccount(accounts[0]);
+// //       account = currentAccount;
+// //       // Setup listener! This is for the case where a user comes to our site
+// //       // and connected their wallet for the first time.
+// //       // setupEventListener()
+// //     } catch (error) {
+// //       console.log(error);
+// //     }
+// //   };
 
-//   const checkIfWalletIsConnected = async () => {
-//     console.log("runs");
-//     const { ethereum } = window;
+// //   const checkIfWalletIsConnected = async () => {
+// //     console.log("runs");
+// //     const { ethereum } = window;
 
-//     if (!ethereum) {
-//       console.log("Make sure you have metamask!");
-//       return;
-//     } else {
-//       console.log("We have the ethereum object", ethereum);
-//     }
+// //     if (!ethereum) {
+// //       console.log("Make sure you have metamask!");
+// //       return;
+// //     } else {
+// //       console.log("We have the ethereum object", ethereum);
+// //     }
 
-//     const accounts = await window.ethereum.request({ method: "eth_accounts" });
-//     const chain = await window.ethereum.request({ method: "eth_chainId" });
-//     let chainId = chain;
-//     console.log("chain ID:", chain);
-//     console.log("global Chain Id:", chainId);
-//     if (accounts.length !== 0) {
-//       account = accounts[0];
-//       console.log("Found an authorized account:", account);
-//       setCurrentAccount(account);
-//       // Setup listener! This is for the case where a user comes to our site
-//       // and ALREADY had their wallet connected + authorized.
-//       // setupEventListener()
-//     } else {
-//       console.log("No authorized account found");
-//     }
-//   };
+// //     const accounts = await window.ethereum.request({ method: "eth_accounts" });
+// //     const chain = await window.ethereum.request({ method: "eth_chainId" });
+// //     let chainId = chain;
+// //     console.log("chain ID:", chain);
+// //     console.log("global Chain Id:", chainId);
+// //     if (accounts.length !== 0) {
+// //       account = accounts[0];
+// //       console.log("Found an authorized account:", account);
+// //       setCurrentAccount(account);
+// //       // Setup listener! This is for the case where a user comes to our site
+// //       // and ALREADY had their wallet connected + authorized.
+// //       // setupEventListener()
+// //     } else {
+// //       console.log("No authorized account found");
+// //     }
+// //   };
 
-//   useEffect(() => {
-//     checkIfWalletIsConnected();
-//   }, []);
+// //   useEffect(() => {
+// //     checkIfWalletIsConnected();
+// //   }, []);
 
-//   return (
-//     <div>
-//       <h2>Working with Super Tokens</h2>
-//       {currentAccount === "" ? (
-//         <button id="connectWallet" className="button" onClick={connectWallet}>
-//           Connect Wallet
-//         </button>
-//       ) : (
-//         <Card className="connectedWallet">
-//           {`${currentAccount.substring(0, 4)}...${currentAccount.substring(
-//             38
-//           )}`}
-//         </Card>
-//       )}
-//       <Form>
-//         <FormGroup className="mb-3">
-//           <FormControl
-//             name="subscriber"
-//             value={approveAmount}
-//             onChange={handleApproveAmountChange}
-//             placeholder="Enter approve amount"
-//           ></FormControl>
-//         </FormGroup>
-//         <p>
-//           <ApproveButton
-//             onClick={() => {
-//               setIsApproveButtonLoading(true);
-//               approveTokens(approveAmount);
-//               setTimeout(() => {
-//                 setIsApproveButtonLoading(false);
-//               }, 1000);
-//             }}
-//           >
-//             Click to Approve
-//           </ApproveButton>
-//         </p>
-//       </Form>
-//       <Form>
-//         <FormGroup className="mb-3">
-//           <FormControl
-//             name="subscriber"
-//             value={upgradeAmount}
-//             onChange={handleUpgradeAmountChange}
-//             placeholder="Enter Upgrade amount"
-//           ></FormControl>
-//         </FormGroup>
-//         <UpgradeButton
-//           onClick={() => {
-//             setIsUpgradeButtonLoading(true);
-//             upgradeTokens(downgradeAmount);
-//             setTimeout(() => {
-//               setIsUpgradeButtonLoading(false);
-//             }, 1000);
-//           }}
-//         >
-//           Click to Upgrade
-//         </UpgradeButton>
-//       </Form>
-//       <Form>
-//         <FormGroup className="mb-3">
-//           <FormControl
-//             name="subscriber"
-//             value={downgradeAmount}
-//             onChange={handleDowngradeAmountChange}
-//             placeholder="Enter Downgrade amount"
-//           ></FormControl>
-//         </FormGroup>
-//         <DowngradeButton
-//           onClick={() => {
-//             setIsUpgradeButtonLoading(true);
-//             downgradeTokens(downgradeAmount);
-//             setTimeout(() => {
-//               setIsUpgradeButtonLoading(false);
-//             }, 1000);
-//           }}
-//         >
-//           Click to Downgrade
-//         </DowngradeButton>
-//       </Form>
+// //   return (
+// //     <div>
+// //       <h2>Working with Super Tokens</h2>
+// //       {currentAccount === "" ? (
+// //         <button id="connectWallet" className="button" onClick={connectWallet}>
+// //           Connect Wallet
+// //         </button>
+// //       ) : (
+// //         <Card className="connectedWallet">
+// //           {`${currentAccount.substring(0, 4)}...${currentAccount.substring(
+// //             38
+// //           )}`}
+// //         </Card>
+// //       )}
+// //       <Form>
+// //         <FormGroup className="mb-3">
+// //           <FormControl
+// //             name="subscriber"
+// //             value={approveAmount}
+// //             onChange={handleApproveAmountChange}
+// //             placeholder="Enter approve amount"
+// //           ></FormControl>
+// //         </FormGroup>
+// //         <p>
+// //           <ApproveButton
+// //             onClick={() => {
+// //               setIsApproveButtonLoading(true);
+// //               approveTokens(approveAmount);
+// //               setTimeout(() => {
+// //                 setIsApproveButtonLoading(false);
+// //               }, 1000);
+// //             }}
+// //           >
+// //             Click to Approve
+// //           </ApproveButton>
+// //         </p>
+// //       </Form>
+// //       <Form>
+// //         <FormGroup className="mb-3">
+// //           <FormControl
+// //             name="subscriber"
+// //             value={upgradeAmount}
+// //             onChange={handleUpgradeAmountChange}
+// //             placeholder="Enter Upgrade amount"
+// //           ></FormControl>
+// //         </FormGroup>
+// //         <UpgradeButton
+// //           onClick={() => {
+// //             setIsUpgradeButtonLoading(true);
+// //             upgradeTokens(downgradeAmount);
+// //             setTimeout(() => {
+// //               setIsUpgradeButtonLoading(false);
+// //             }, 1000);
+// //           }}
+// //         >
+// //           Click to Upgrade
+// //         </UpgradeButton>
+// //       </Form>
+// //       <Form>
+// //         <FormGroup className="mb-3">
+// //           <FormControl
+// //             name="subscriber"
+// //             value={downgradeAmount}
+// //             onChange={handleDowngradeAmountChange}
+// //             placeholder="Enter Downgrade amount"
+// //           ></FormControl>
+// //         </FormGroup>
+// //         <DowngradeButton
+// //           onClick={() => {
+// //             setIsUpgradeButtonLoading(true);
+// //             downgradeTokens(downgradeAmount);
+// //             setTimeout(() => {
+// //               setIsUpgradeButtonLoading(false);
+// //             }, 1000);
+// //           }}
+// //         >
+// //           Click to Downgrade
+// //         </DowngradeButton>
+// //       </Form>
 
-//       <div className="description">
-//         <p>
-//           Go to the SuperTokens.js component and look at the
-//           <b> upgrade and approve </b>
-//           functions to see under the hood
-//         </p>
-//       </div>
-//     </div>
-//   );
-// };
+// //       <div className="description">
+// //         <p>
+// //           Go to the SuperTokens.js component and look at the
+// //           <b> upgrade and approve </b>
+// //           functions to see under the hood
+// //         </p>
+// //       </div>
+// //     </div>
+// //   );
+// // };

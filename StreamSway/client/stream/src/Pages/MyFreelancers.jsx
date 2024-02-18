@@ -12,7 +12,7 @@ const MyFreeLancers = () => {
             </div>
 
             {/* <SideBar /> */}
-            <div className="flex  flex-col  w-3/4 justify-center justify-self-center ml-10 ">
+            <div className=" flex flex-col ml-10 mr-10 w-full ">
                 <MyFreelancerCard />
             </div>
         </div>

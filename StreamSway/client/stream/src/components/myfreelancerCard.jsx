@@ -17,12 +17,13 @@ const MyFreelancerCard = () => {
   const { address, connector, isConnected } = useAccount();
   const [userstreambal,setUserStreamBal]= useState();
   const [userindex,setUserIndex]= useState(null);
+  const [incommingBalance,setIncommingBalance] = useState(0);
   
   
   const  getFreelancers = async()=>{
     if (window.ethereum || window.ethereum.isMiniPay) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = await  provider.getSigner(address);
+      const signer =   provider.getSigner(address);
       console.log("address yollow",await signer.getAddress());
       try{
   
@@ -123,12 +124,12 @@ async function getUserCusdxStream() {
       }
     }
   
-  // const { data:myFreelancers, isError, isLoading } = useContractRead({
-  //   address: GigProContract,
-  //   abi: gigproAbi,
-  //   functionName: 'getFreeLancersByOwner',
-  //   args: [address]
-  // })
+  const { data:myFreelancers, isError, isLoading } = useContractRead({
+    address: GigProContract,
+    abi: gigproAbi,
+    functionName: 'getFreeLancersByOwner',
+    args: [address]
+  })
   console.log("addressis:,",freelancers);
   const removeFreeeLancers = async()=>{
     if (window.ethereum || window.ethereum.isMiniPay) {
@@ -167,9 +168,9 @@ const removeFreeeLancer = async()=>{
    
      
       if(freeLancerAddress != undefined){
-        //await removeFreeLancer();
-        alert("approving ....")
-        await removeFreeeLancers();
+        await removeFreeLancer();
+        
+        //await removeFreeeLancers();
       }
       else{
         console.log("the address is not set");
@@ -179,7 +180,7 @@ const removeFreeeLancer = async()=>{
 
   }catch(err){
     console.log("err ihjgerujiugirunir  iruh54iyolow",err);
-    alert("failed ....")
+    alert("check network")
   }
 }
   const employess = [
@@ -193,8 +194,71 @@ const removeFreeeLancer = async()=>{
     { address: '0x8878787874827487vdfjdfywetf6f23276r', amount: '4000' },
   ];
   const addis ="0x65E28C9C4Ef1a756d8df1c507b7A84eFcF606fd4"
+
+  async function getUserCusdxStream() {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+
+    const signer = provider.getSigner();
+    console.log("usesrs address", await signer.getAddress());
+
+    const chainId = await window.ethereum.request({ method: "eth_chainId" });
+    const sf = await Framework.create({
+        chainId: Number(chainId),
+        provider: provider
+    });
+
+    const superSigner = sf.createSigner({ signer: signer });
+
+    console.log(signer);
+    console.log(await superSigner.getAddress());
+    const celox = await sf.loadSuperToken("cUSDx");
+    
+
+    console.log(celox);
+
+    try {
+        setInterval(async () => {
+            const userbalancercusdx = await celox.realtimeBalanceOf({
+                account: "0x65E28C9C4Ef1a756d8df1c507b7A84eFcF606fd4",
+                providerOrSigner: provider,
+                timestamp: Date.now()
+            });
+            const totaluserbalancercusdx = await celox.balanceOf({
+              account: "0x65E28C9C4Ef1a756d8df1c507b7A84eFcF606fd4",
+              providerOrSigner:provider
+            })
+            
+            console.log("totalUserBalance",totaluserbalancercusdx)
+            
+            const userflow = await celox.getFlow({
+              
+                sender: await signer.getAddress(),
+                receiver: "0x65E28C9C4Ef1a756d8df1c507b7A84eFcF606fd4",
+                providerOrSigner: provider,
+            })
+            const u = await celox.getAccountFlowInfo({
+              account: "0x65E28C9C4Ef1a756d8df1c507b7A84eFcF606fd4",
+              providerOrSigner: provider,
+          })
+          console.log("user flow user flow",userflow.flowRate)
+         
+           let userbal = userbalancercusdx.availableBalance;
+            userbal += (userflow.flowRate); // Adding the flow rate to the balance
+            setIncommingBalance(userbal/10**24); 
+            
+            
+        }, 1); // Update every second
+    } catch (error) {
+        console.log(
+            "cusdx balance failed!"
+        );
+        console.error(error);
+    }
+}
  useEffect(()=>{
-  getFreelancers();
+  //getFreelancers();
+  getUserCusdxStream()
   // const interval = setInterval(() => {
   //   getUserCusdxStream();
   // }, 1000); // 1000 milliseconds = 1 second
@@ -202,37 +266,42 @@ const removeFreeeLancer = async()=>{
   // // Cleanup the interval when the component unmounts
   // return () => clearInterval(interval);
   //getUserFlow(addis);
- },[address]);
+ },[address,incommingBalance,myFreelancers]);
   return (
     <>
     {/* {freelancers ==null || freelancers == undefined?<Toast message="Please Add Users!!"/>:""} */}
-      {freelancers?.map((employee, index) => (
-        <div className="w-full h-1/2 items-center gap-4">
+      {myFreelancers?.map((employee, index) => (
+        <div key={index} className="w-4/5 h-50% md:h-1/2 items-center justify-center mb-4  ">
 
         
-        <div key={index} className="flex full flex-col mb-10 md:w-3/4   w-full  text-gray-200   bg-[#2B392B] rounded-2xl   ">
-          <div className="flex   md:justify-evenly md:w-full md:flex-row  w-full flex-col md:text-xl text-sm   h-1/2 items-center text-white mb-8 gap-8 ">
-            <h3 className="text-white">FreeLancer Address: </h3>
+        <div className="flex full flex-col gap-8 md:w-3/4  h-full  w-full  border border-gray-300  border-r-8 border-b-8   bg-white text-black rounded-2xl   ">
+          <div className="flex   md:justify-evenly md:w-full md:flex-row  w-full flex-col md:text-xl text-sm   h-1/2 items-center text-black mb-8 gap-8 ">
+            <h3 className="text-black font-bold">FreeLancer Address: </h3>
             <span className="flex ">
             {employee.userAddress.substring(0,15)}<h4>...</h4>{employee.userAddress.substring(employee.userAddress.length-8,employee.userAddress.length)}
             </span>
             
           </div>
-          <div className="flex  md:justify-stretch  justify-between  md:text-xl text-sm w-full gap-2 items-center text-white ">
-            <h3 className="ml-4">Amount in Cusd: </h3>
-            <span className="mr-4">{Number(employee.payAmount/10**18)}</span>
+          <div className="flex  md:justify-stretch  justify-between  md:text-xl text-sm w-full gap-2 items-center text-black ">
+            <h3 className="ml-4 text-black">Amount in Cusd: </h3>
+            <span className="mr-4">{Number(employee.payAmount)/10**18}</span>
+           <span className="text-black">inflow: <span className="mr-4 text-green-400">{Number(incommingBalance)}</span> </span> 
             
           </div>
-          <div className="flex justify-between items-center text-white">
+          <div className="flex justify-end items-center w-full ">
+
+         
+          <div className={`flex  items-center text-white w-25 m-4 `}>
             {userindex !==index? <button onClick={()=>{setFreelancerAddress(employee.userAddress);setUserIndex(index)}} className="inline-flex pl-2 justify-center items-center w-100 rounded-full text-red-500">
               End Contract
-            </button>: <button onClick={()=>{removeFreeeLancer()}} className="inline-flex pl-2 justify-center items-center  w-100 rounded-full text-yellow-500">
+            </button>: <button onClick={()=>{removeFreeeLancer()}} className="inline-flex pl-2 justify-center items-center  w-100 rounded-full text-green-500">
               Approve
             </button>}
           
            
             
             
+          </div>
           </div>
         </div>
         </div>
