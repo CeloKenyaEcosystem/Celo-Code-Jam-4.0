@@ -1,4 +1,4 @@
-# Celo Code Jam 3.0
+# Celo Code Jam 4.0
 
 #### Celo Code Jam Polpular Theme Tracks
 The Code Jam Theme Tracks are specific categories or themes for participants to focus on while participating in the Code Jam event. Each track represents a different area of interest or challenge that participants can choose to tackle with their projects. The three tracks mentioned are as follows:
@@ -120,17 +120,9 @@ We used the following Judging criteria to tally the points and award the winners
 <ul>
   <li>Technology - Engineering skills demonstrated, and the quality code</li>
   <li>Design - Attention to aesthetics, interaction, and user interface</li>
-  <li>Impact: A solution that meets a customer’s need has the potential to be a sustainable, impactful solution.</li>
+  <li>Impact - A solution that meets a customer’s need has the potential to be a sustainable, impactful solution.</li>
   <li>Presentation - The clarity of written and oral presentation</li>
   <li>Inspiration - How much we love and are excited about the idea</li>
 </ul>
 
-
-
-
-
-
-
-
-
-
+Judges were asked to provide feedback on each category separately as well as give an overall score out of 100.
