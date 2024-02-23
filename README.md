@@ -120,7 +120,7 @@ We used the following Judging criteria to tally the points and award the winners
 <ul>
   <li>Technology - Engineering skills demonstrated, and the quality code</li>
   <li>Design - Attention to aesthetics, interaction, and user interface</li>
-  <li>Impact: A solution that meets a customer’s need has the potential to be a sustainable, impactful solution.</li>
+  <li>Impact - A solution that meets a customer’s need has the potential to be a sustainable, impactful solution.</li>
   <li>Presentation - The clarity of written and oral presentation</li>
   <li>Inspiration - How much we love and are excited about the idea</li>
 </ul>
